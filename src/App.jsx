@@ -38,7 +38,7 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = axios.post('https://nova-api-example.onrender.com/api/login', {
+      const response =axios.post('https://nova-login1.onrender.com/api/login', {
   email,
   password
 });
