@@ -7,7 +7,10 @@ const app = express();
 
 // Allow requests from the Vite frontend
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',
+    process.env.FRONTEND_URL
+  ].filter(Boolean)
 }));
 
 // Read JSON data sent by the frontend
