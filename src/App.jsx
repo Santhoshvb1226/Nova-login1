@@ -38,10 +38,10 @@ function Login() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/login',
-        { email: email.trim(), password }
-      );
+      const response = axios.post('https://nova-api-example.onrender.com/api/login', {
+  email,
+  password
+});
 
       if (response.data.success) {
         navigate('/dashboard');
