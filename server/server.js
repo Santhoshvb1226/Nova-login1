@@ -29,26 +29,32 @@ app.post('/api/login', (req, res) => {
 
   if (!email || !password) {
     return res.status(400).json({
+      success: false,
       message: 'Email and password are required.',
     });
   }
 
-  // Demo credentials
-  if (
-    email === 'demo@nova.com' &&
-    password === 'Nova123'
-  ) {
-    return res.json({
-      success: true,
-      message: 'Login successful!',
-      user: { email },
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailPattern.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please enter a valid email address.',
     });
   }
 
-  return res.status(401).json({
-    message: 'Invalid email or password.',
+  return res.status(200).json({
+    success: true,
+    message: 'Login successful!',
+    user: { email },
   });
 });
+
+  return res.status(401).json({
+    success: false,
+    message: 'Invalid email or password.',
+  });
+
 
 const PORT = process.env.PORT || 5000;
 
