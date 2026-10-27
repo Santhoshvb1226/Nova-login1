@@ -24,40 +24,17 @@ app.get('/', (req, res) => {
 });
 
 // Login API
-app.post('/api/login', (req, res) => {
+app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({
-      success: false,
-      message: 'Email and password are required.',
-    });
+  if (email !== "demo@nova.com" || password !== "123456") {
+    return res.status(401).json({ message: "Invalid credentials" });
   }
 
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!emailPattern.test(email)) {
-    return res.status(400).json({
-      success: false,
-      message: 'Please enter a valid email address.',
-    });
-  }
-
-  return res.status(200).json({
-    success: true,
-    message: 'Login successful!',
-    user: { email },
-  });
+  res.json({ message: "Login success" });
 });
 
-  return res.status(401).json({
-    success: false,
-    message: 'Invalid email or password.',
-  });
 
 
 const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`NOVA API running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log("Server running on port " + PORT));
