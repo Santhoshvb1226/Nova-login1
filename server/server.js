@@ -1,11 +1,9 @@
-
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
 
-// Allow requests from the Vite frontend
 app.use(cors({
   origin: [
     'http://localhost:5173',
@@ -13,7 +11,6 @@ app.use(cors({
   ].filter(Boolean)
 }));
 
-// Read JSON data sent by the frontend
 app.use(express.json());
 
 // Test route
@@ -24,17 +21,41 @@ app.get('/', (req, res) => {
 });
 
 // Login API
-app.post("/login", (req, res) => {
+app.post('/api/login', (req, res) => {
   const { email, password } = req.body;
 
-  if (email !== "demo@nova.com" || password !== "123456") {
-    return res.status(401).json({ message: "Invalid credentials" });
+  if (!email || !password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Email and password are required.',
+    });
   }
 
-  res.json({ message: "Login success" });
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailPattern.test(email)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please enter a valid email address.',
+    });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({
+      success: false,
+      message: 'Password must contain at least 6 characters.',
+    });
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: 'Login successful!',
+    user: { email },
+  });
 });
 
-
-
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log("Server running on port " + PORT));
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
