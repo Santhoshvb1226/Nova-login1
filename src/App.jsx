@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import axios from 'axios';
 import {
@@ -14,6 +13,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -38,10 +38,13 @@ function Login() {
     setLoading(true);
 
     try {
-      const response =axios.post('', {
-  email,
-  password
-});
+      const response = await axios.post(
+        'https://nova-login1.onrender.com/api/login',
+        {
+          email: email.trim(),
+          password,
+        }
+      );
 
       if (response.data.success) {
         navigate('/dashboard');
@@ -49,9 +52,13 @@ function Login() {
         setMessage(response.data.message || 'Login failed.');
       }
     } catch (error) {
+      console.error('Login error:', error);
+
       setMessage(
         error.response?.data?.message ||
-          'Cannot connect to the server. Please try again.'
+          `Login failed: ${
+            error.response?.status || error.message
+          }`
       );
     } finally {
       setLoading(false);
@@ -77,7 +84,10 @@ function Login() {
 
         <form onSubmit={handleLogin} className="space-y-5">
           <div>
-            <label htmlFor="email" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium"
+            >
               Email address
             </label>
 
@@ -88,12 +98,16 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
+              required
               className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-violet-500"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="mb-2 block text-sm font-medium">
+            <label
+              htmlFor="password"
+              className="mb-2 block text-sm font-medium"
+            >
               Password
             </label>
 
@@ -104,12 +118,17 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="At least 6 characters"
+              required
+              minLength={6}
               className="w-full rounded-xl border border-slate-700 bg-slate-800 px-4 py-3 text-white outline-none placeholder:text-slate-500 focus:border-violet-500"
             />
           </div>
 
           {message && (
-            <p role="alert" className="rounded-lg bg-red-950/60 p-3 text-sm text-red-300">
+            <p
+              role="alert"
+              className="rounded-lg bg-red-950/60 p-3 text-sm text-red-300"
+            >
               {message}
             </p>
           )}
